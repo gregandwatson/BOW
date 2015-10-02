@@ -20,6 +20,16 @@ feature "User follows an article from show" do
 		click_link 'Unfollow'
 		expect(article.followers.count).to eq(0)
 	end
+
+	scenario "User follower avatar is displayed on followers page" do
+	  article.state = FactoryGirl.create(:state)
+		user = FactoryGirl.create(:user)
+		login_as(user, :scope => :user)
+		visit article_path(article)
+		click_link 'Follow'
+		visit articles_followers_path(article)
+		expect(page).to have_content(user.name)
+	end
 end
 
 feature "Non-logged in user attempts to follow an article from show" do
