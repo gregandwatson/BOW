@@ -12,6 +12,11 @@ class Article < ActiveRecord::Base
   has_many :subjects
   accepts_nested_attributes_for :subjects, :reject_if => :all_blank, :allow_destroy => true
 
+  has_many :documents,
+           :through => :article_documents
+  has_many :article_documents
+  accepts_nested_attributes_for :documents, :reject_if => :all_blank, :allow_destroy => true
+
   # Paper Trail
   has_paper_trail
   # Acts as Follows, for follower functionality

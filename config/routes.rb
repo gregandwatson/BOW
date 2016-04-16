@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :documents
   get '/maps/index', to: 'maps#index'
 
   get '/about', to: 'static#about'
