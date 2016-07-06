@@ -43,6 +43,9 @@ class Article < ActiveRecord::Base
   # Avatar uploader using carrierwave
   mount_uploader :avatar, AvatarUploader
 
+  # Document uploader using carrierwave
+  mount_uploaders :documents, DocumentUploader
+
   # Geocoding articles
   geocoded_by :full_address   # can also be an IP address
   # before_validation :check_for_empty_fields
