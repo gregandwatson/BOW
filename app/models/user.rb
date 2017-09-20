@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   acts_as_messageable
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
-  after_save :add_to_mailchimp, on: [:create]
+  # after_save :add_to_mailchimp, on: [:create]
 
   def mailboxer_name
     self.name
@@ -29,40 +29,6 @@ class User < ActiveRecord::Base
       :name,
       [:name, :id]
     ]
-  end
-
-  def add_to_mailchimp
-    if self[subscribed]
-      gb = Gibbon::Request.new
-      gb.lists.subscribe({:id => ENV['MAILCHIMP_LIST_ID'], :email => {:email => "#{self.email}"}, :merge_vars => {:FNAME => "#{self.name}"}})
-    end
-  end
-
-  # -------- Previous code
-  # returns the mailchimp member if one exists for @user.email
-  def mailchimp_user
-    gb = Gibbon::Request.new
-    gb.lists(ENV['MAILCHIMP_LIST_ID']).members(Digest::MD5.hexdigest("#{self.email.downcase}")).retrieve
-    rescue Gibbon::MailChimpError => e
-    return nil, :flash => { error: e.message }
-  end
-
-  # returns mailchimp member id for users registered with MC
-  def mailchimp_member_id
-    if self.mailchimp_user.kind_of?(Array)
-      return nil
-    elsif self.mailchimp_user.kind_of?(Hash)
-      self.mailchimp_user["id"]
-    end
-  end
-
-  # # returns the mailChimp status of the user
-  def mailchimp_status
-    if self.mailchimp_user.kind_of?(Array)
-      return nil
-    elsif self.mailchimp_user.kind_of?(Hash)
-      self.mailchimp_user["status"]
-    end
   end
 
 end
